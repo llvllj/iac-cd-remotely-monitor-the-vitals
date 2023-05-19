@@ -17,7 +17,7 @@ Create a directory for your project and navigate to it using the command line.
 
 Organize your project with the following directory structure:
 ```
-project/
+terraform/
 ├── modules/
 │ ├── vpc/
 │ ├── subnet/
@@ -52,4 +52,60 @@ Run terraform init to initialize the Terraform project. Then, run terraform plan
 
 ### Review Outputs:
 After the apply command completes, review the outputs displayed. These will provide you with important information such as VPC ID, subnet ID, S3 bucket name, EC2 instance IDs, and RDS endpoint.
+
+## Step 2: Configuration Management: Set up Ansible for the configuration management of the cloud servers
+
+### Ensure Ansible is installed on your local machine or a control node.
+
+### Create an Ansible Inventory file:
+
+This file will contain the IP addresses of your EC2 instances that you're managing with Ansible.
+
+Create a file called 'inventory.ini' in your main directory (alongside the Terraform files) and insert your EC2 instance IP addresses
+
+### create an Ansible playbook that will handle the software installation and configuration on the EC2 instances.
+
+Create a file named playbook.yml in your main directory
+
+###  Define the variables used in the playbook.
+
+Create a folder named vars in the same directory as your playbook.yml and within it, create a file named main.yml. In this file, you will define the variables used in the playbook
+
+### run the Ansible playbook using the following command:
+
+'''
+ansible-playbook -i inventory playbook.yml
+
+'''
+
+tasks include updating and upgrading the apt packages, installing necessary software, cloning your application repository, building Docker images, and starting your application with Docker Compose.
+
+### Ensure that the playbook executes correctly
+
+To do this, you can add a task at the end of the playbook that sends a request to the application and checks the response. Here's an example task you can add:
+
+'''
+- name: application status
+  uri:
+    url: "http://{{ ansible_host }}:8080"
+    method: GET
+    status_code: 200
+'''
+
+### automatically run the Ansible playbook every time Terraform provisions new infrastructure.
+
+add a null_resource in your main.tf file that triggers the Ansible playbook:
+
+'''
+resource "null_resource" "ansible_provisioner" {
+  triggers = {
+    instance_ids = join(",", module.ec2.instance_ids)
+  }
+
+  provisioner "local-exec" {
+    command = "ansible-playbook -i ${join(",", module.ec2.instance_ids)} playbook.yml"
+  }
+}
+'''
+
 
