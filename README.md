@@ -36,6 +36,14 @@ Create separate modules for each resource to promote modularity and reusability.
 
 ### Define Main Configuration
 
+In the main.tf file, define the main configuration that calls the individual modules and sets up the necessary resources. It includes:
+
+Calling the VPC module and passing necessary variables.
+Calling the Subnet module and passing necessary variables.
+Calling the S3 module and passing necessary variables.
+Calling the EC2 module and passing necessary variables.
+Calling the RDS module and passing necessary variables.
+Defining additional resources like security groups.
 
 ### Define Variables
 In the variables.tf file, define the variables used in your Terraform configuration. Variables allow you to provide inputs at runtime, making your code more flexible. Define variables for VPC CIDR block, subnet CIDR block, availability zone, bucket name, instance count, AMI, instance type, database identifier, allocated storage, database engine, instance class, username, and password.
@@ -49,6 +57,12 @@ In the terraform.tfvars file, provide the values for the variables defined earli
 
 ### Initialize and Apply:
 Run terraform init to initialize the Terraform project. Then, run terraform plan to preview the changes that Terraform will apply. Finally, run terraform apply to create the infrastructure on AWS.
+
+```
+terraform init
+terraform plan
+terraform apply
+```
 
 ### Review Outputs:
 After the apply command completes, review the outputs displayed. These will provide you with important information such as VPC ID, subnet ID, S3 bucket name, EC2 instance IDs, and RDS endpoint.
