@@ -52,5 +52,4 @@ Run terraform init to initialize the Terraform project. Then, run terraform plan
 
 ### Review Outputs:
 After the apply command completes, review the outputs displayed. These will provide you with important information such as VPC ID, subnet ID, S3 bucket name, EC2 instance IDs, and RDS endpoint.
-TEEEEEEEEEEEEEEST  
 
