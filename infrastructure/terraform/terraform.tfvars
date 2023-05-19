@@ -1,0 +1,13 @@
+vpc_cidr_block            = "10.0.0.0/16"
+subnet_cidr_block         = "10.0.1.0/24"
+availability_zone         = "us-east-1a"
+bucket_name               = "my-app-assets"
+instance_count            = 2
+instance_ami              = "ami-0c94855ba95c71c99"
+instance_type             = "t2.micro"
+database_identifier       = "my-db"
+database_allocated_storage = 20
+database_engine           = "postgres"
+database_instance_class   = "db.t2micro"
+database_username         = "admin"
+database_password         = "admin123"
