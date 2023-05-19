@@ -73,10 +73,10 @@ Create a folder named vars in the same directory as your playbook.yml and within
 
 ### run the Ansible playbook using the following command:
 
-'''
+```
 ansible-playbook -i inventory playbook.yml
 
-'''
+```
 
 tasks include updating and upgrading the apt packages, installing necessary software, cloning your application repository, building Docker images, and starting your application with Docker Compose.
 
@@ -84,19 +84,18 @@ tasks include updating and upgrading the apt packages, installing necessary soft
 
 To do this, you can add a task at the end of the playbook that sends a request to the application and checks the response. Here's an example task you can add:
 
-'''
+```
 - name: application status
   uri:
     url: "http://{{ ansible_host }}:8080"
     method: GET
     status_code: 200
-'''
+```
 
 ### automatically run the Ansible playbook every time Terraform provisions new infrastructure.
 
 add a null_resource in your main.tf file that triggers the Ansible playbook:
-
-'''
+```
 resource "null_resource" "ansible_provisioner" {
   triggers = {
     instance_ids = join(",", module.ec2.instance_ids)
@@ -106,6 +105,6 @@ resource "null_resource" "ansible_provisioner" {
     command = "ansible-playbook -i ${join(",", module.ec2.instance_ids)} playbook.yml"
   }
 }
-'''
+```
 
 
