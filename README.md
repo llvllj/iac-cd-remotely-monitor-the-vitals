@@ -169,5 +169,38 @@ resource "null_resource" "ansible_provisioner" {
   }
 }
 ```
+## Step 3: Set up a CI/CD pipeline using Jenkins
 
+### Install Jenkins:
 
+install Jenkins on a server or in a container. Please make sure that it is configured properly. You can refer to the official Jenkins installation guide for detailed steps: https://www.jenkins.io/doc/book/installing/
+
+### Create a Jenkins Pipeline
+
+Open Jenkins in your web browser (typically accessible via http://<jenkins-server-ip>:8080).
+Log in with your Jenkins credentials.
+Click on 'New Item' in the Jenkins dashboard.
+Name your new item (e.g., 'HealthcareApp'), choose 'Pipeline' as the type, and then click 'OK'.
+You will be directed to the Pipeline configuration page.
+
+### Configure Source Code Management
+
+In the Pipeline configuration page, scroll down to the 'Pipeline' section.
+For 'Definition', select 'Pipeline script from SCM'.
+For 'SCM', select 'Git'.
+In the 'Repository URL' field, enter the URL of your Git repository (e.g., https://github.com/llvllj/healthcare-app.git).
+Make sure the 'Branches to build' field is set to */main to target the main branch of your repository.
+
+### Write a Jenkinsfile
+
+A Jenkinsfile is a text file that contains the definition of the Jenkins Pipeline. This file should be placed in the root directory of your source code repository
+
+### Commit and Push Jenkinsfile
+
+### Configure Jenkinsfile Path
+
+In Jenkins pipeline configuration (in Jenkins -> your pipeline -> Configure), set the 'Script Path' to the path of the Jenkinsfile in your Git repository. It's Jenkinsfile if the file is in the root directory.
+
+### Set Up Webhook
+
+Set up a webhook in your Git repository to notify Jenkins of code pushes to the main branch. You can do this in your repository settings under the 'Webhooks' section. The payload URL is typically http://<jenkins-server-ip>:8080/github-webhook/.

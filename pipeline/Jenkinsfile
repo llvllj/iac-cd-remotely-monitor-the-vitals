@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/llvllj/healthcare-app.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+        stage('Test'){
+            steps{
+                sh 'mvn test'
+            }
+        }
+        stage('Docker Build'){
+            steps{
+               script {
+                docker.build("healthcare-app:latest")
+               }
+            }
+        }
+        stage('Deploy'){
+            steps{
+                sshagent(['deploy-key']) {
+                    sh 'scp docker-compose-prod.yml ec2-user@your-ec2-ip:/home/ec2-user/'
+                    sh 'ssh ec2-user@your-ec2-ip docker-compose -f docker-compose-prod.yml up -d'
+                }
+            }
+        }
+    }
+}
