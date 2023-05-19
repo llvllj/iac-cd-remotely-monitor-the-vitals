@@ -38,3 +38,13 @@ resource "aws_security_group" "rds_sg" {
   vpc_id = module.vpc.vpc_id
   # Rules
 }
+
+resource "null_resource" "ansible_provisioner" {
+  triggers = {
+    instance_ids = join(",", module.ec2.instance_ids)
+  }
+
+  provisioner "local-exec" {
+    command = "ansible-playbook -i ${join(",", module.ec2.instance_ids)} playbook.yml"
+  }
+}
