@@ -1,6 +1,55 @@
 # iac-cd-remotely-monitor-the-vitals
 This mobile application is aimed at providing healthcare professionals a platform to remotely monitor the vitals of their patients and provide consultation accordingly.
 
+assumes that the application is a Java application built with Maven, and it's Dockerized
+
+
+I would recommend the following folder structure for the project:
+
+```
+project/
+├── infrastructure/
+│   ├── terraform/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   └── ...
+│   └── ansible/
+│       ├── playbooks/
+│       │   ├── installation.yml
+│       │   ├── configuration.yml
+│       │   └── ...
+│       └── inventories/
+│           ├── production
+│           └── staging
+├── application/
+│   ├── src/
+│   │   ├── app_code
+│   │   └── ...
+│   ├── Dockerfile
+│   └── ...
+├── pipeline/
+│   ├── Jenkinsfile
+│   └── ...
+├── monitoring/
+│   ├── scripts/
+│   │   ├── cloudwatch_metrics.py
+│   │   └── ...
+│   ├── alerts/
+│   │   ├── cpu_usage.yaml
+│   │   └── ...
+│   ├── dashboards/
+│   │   ├── app_performance.json
+│   │   └── ...
+│   └── ...
+└── documentation/
+    ├── architecture.md
+    ├── setup_steps.md
+    ├── security.md
+    └── ...
+
+```
+
 ## Step 1: Infrastructure Setup with Terraform
 
 To set up the infrastructure for the healthcare mobile application, we will be using Terraform, an Infrastructure-as-Code (IaC) tool.
