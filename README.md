@@ -204,3 +204,72 @@ In Jenkins pipeline configuration (in Jenkins -> your pipeline -> Configure), se
 ### Set Up Webhook
 
 Set up a webhook in your Git repository to notify Jenkins of code pushes to the main branch. You can do this in your repository settings under the 'Webhooks' section. The payload URL is typically http://<jenkins-server-ip>:8080/github-webhook/.
+
+## Step 4: monitoring and logging
+
+I'm going to use amazon CloudWatch as it is natively integrated into AWS and provides a wide range of monitoring options.
+
+### Enable Detailed Monitoring on EC2 Instances
+
+ Detailed monitoring will give you data every minute instead of every five minutes this can be enabled as a part of the Terraform configuration for the EC2 instances.
+
+ add this to your main.tf file where you have your EC2 instance configuration:
+
+ ```
+ resource "aws_instance" "example" {
+  ...
+  monitoring = true
+  ...
+}
+
+ ```
+
+ ### Set up AWS CloudWatch Logs Agent on EC2 Instances
+
+create an Ansible playbook for installing and configuring the CloudWatch Logs agent. This could be named cloudwatch_agent_install.yml and should be placed in the ansible/playbooks directory.
+
+```
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install CloudWatch Logs agent
+      command: >
+        curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O &&
+        python3 awslogs-agent-setup.py --region=us-west-2 -n -b default -y
+
+```
+### Set up CloudWatch-Alarms
+
+This would be done as part of the Terraform configuration. Here is a sample alarm to monitor CPU utilization:
+
+
+```
+resource "aws_cloudwatch_metric_alarm" "example" {
+  alarm_name          = "high-cpu-utilization"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = "120"
+  statistic           = "Average"
+  threshold           = "80"
+  alarm_description   = "This metric checks cpu utilization"
+  alarm_actions       = [aws_sns_topic.example.arn]
+  dimensions = {
+    InstanceId = aws_instance.example.id
+  }
+}
+
+resource "aws_sns_topic" "example" {
+  name = "high-cpu-utilization"
+}
+
+```
+
+
+
+
+
+
+
