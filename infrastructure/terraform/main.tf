@@ -34,6 +34,11 @@ module "rds" {
   database_password          = var.database_password
 }
 
+module "cloudwatch" {
+  source       = "./modules/cloudwatch"
+  instance_ids = module.ec2.instance_ids
+}
+
 resource "aws_security_group" "rds_sg" {
   vpc_id = module.vpc.vpc_id
   # Rules
